@@ -100,7 +100,7 @@ const build = async ({
 		const filePath = `${toWrite}.json`;
 		const prevSizeIfAny = fs.existsSync(filePath)
 			? await sizeOfContracts({
-					contractToObjectMap: { [filePath]: require(filePath).evm.bytecode.object },
+					contractToObjectMap: { [filePath]: require(filePath).evm.deployedBytecode.object },
 			  })[0]
 			: undefined;
 		if (prevSizeIfAny) {
@@ -110,6 +110,7 @@ const build = async ({
 		if (typeof overrides[contract] === 'object') {
 			runs = overrides[contract].runs;
 		}
+		runs = 0
 		console.log(
 			gray(
 				`Attempting compile of ${contract}${
@@ -156,7 +157,7 @@ const build = async ({
 			fs.writeFileSync(filePath, stringify(artifacts[contractName]));
 
 			const { pcent, bytes, length } = sizeOfContracts({
-				contractToObjectMap: { [filePath]: artifacts[contractName].evm.bytecode.object },
+				contractToObjectMap: { [filePath]: artifacts[contractName].evm.deployedBytecode.object },
 			})[0];
 
 			console.log(
