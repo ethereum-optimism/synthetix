@@ -97,6 +97,7 @@
 	},
 	"dependencies": {
 		"@chainlink/contracts-0.0.3": "npm:@chainlink/contracts@0.0.3",
+		"@eth-optimism/solc-transpiler": "latest",
 		"commander": "5.1.0",
 		"openzeppelin-solidity-2.3.0": "npm:openzeppelin-solidity@2.3.0",
 		"pretty-error": "^2.1.1",

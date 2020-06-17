@@ -31,6 +31,7 @@ const build = async ({
 	testHelpers,
 	showWarnings,
 	showContractSize,
+	useOVM
 } = {}) => {
 	console.log(gray('Starting build...'));
 
@@ -129,6 +130,7 @@ const build = async ({
 			sources: {
 				[contract]: sources[contract],
 			},
+			useOVM,
 			runs,
 		});
 
@@ -206,6 +208,7 @@ module.exports = {
 				'Number of runs for the optimizer by default',
 				DEFAULTS.optimizerRuns
 			)
+			.option('-ovm, --use-OVM', 'Transpile to OVM')
 			.option('-s, --show-contract-size', 'Show contract sizes')
 			.option('-t, --test-helpers', 'Also compile the test-helpers')
 			.option('-w, --show-warnings', 'Show warnings')
