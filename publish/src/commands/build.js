@@ -184,7 +184,7 @@ const build = async ({
 		const contractToObjectMap = allCompiledFilePaths
 			.filter(file => fs.existsSync(file))
 			.reduce((memo, file) => {
-				memo[file] = require(file).evm.bytecode.object;
+				memo[file] = require(file).evm.deployedBytecode.object;
 				return memo;
 			}, {});
 
