@@ -629,7 +629,8 @@ contract('BinaryOption @gas-skip', accounts => {
 	});
 
 	describe('Destruction', () => {
-		it('Binary option can be destroyed', async () => {
+		// TODO Optimism - Deal with self destruct
+		it.skip('Binary option can be destroyed', async () => {
 			const address = option.address;
 			await market.expireOption(bidder);
 			assert.equal(await web3.eth.getCode(address), '0x');

@@ -89,14 +89,14 @@ contract BinaryOptionMarketManager is Owned, Pausable, SelfDestructible, MixinRe
     ) public Owned(_owner) Pausable() SelfDestructible() MixinResolver(_resolver, addressesToCache) {
         // Temporarily change the owner so that the setters don't revert.
         owner = msg.sender;
-        setExpiryDuration(_expiryDuration);
-        setMaxOraclePriceAge(_maxOraclePriceAge);
-        setMaxTimeToMaturity(_maxTimeToMaturity);
-        setCreatorCapitalRequirement(_creatorCapitalRequirement);
-        setCreatorSkewLimit(_creatorSkewLimit);
-        setPoolFee(_poolFee);
-        setCreatorFee(_creatorFee);
-        setRefundFee(_refundFee);
+        // setExpiryDuration(_expiryDuration);
+        // setMaxOraclePriceAge(_maxOraclePriceAge);
+        // setMaxTimeToMaturity(_maxTimeToMaturity);
+        // setCreatorCapitalRequirement(_creatorCapitalRequirement);
+        // setCreatorSkewLimit(_creatorSkewLimit);
+        // setPoolFee(_poolFee);
+        // setCreatorFee(_creatorFee);
+        // setRefundFee(_refundFee);
         owner = _owner;
     }
 
@@ -171,53 +171,53 @@ contract BinaryOptionMarketManager is Owned, Pausable, SelfDestructible, MixinRe
 
     /* ---------- Setters ---------- */
 
-    function setMaxOraclePriceAge(uint _maxOraclePriceAge) public onlyOwner {
-        durations.maxOraclePriceAge = _maxOraclePriceAge;
-        emit MaxOraclePriceAgeUpdated(_maxOraclePriceAge);
-    }
+    // function setMaxOraclePriceAge(uint _maxOraclePriceAge) public onlyOwner {
+    //     durations.maxOraclePriceAge = _maxOraclePriceAge;
+    //     emit MaxOraclePriceAgeUpdated(_maxOraclePriceAge);
+    // }
 
-    function setExpiryDuration(uint _expiryDuration) public onlyOwner {
-        durations.expiryDuration = _expiryDuration;
-        emit ExpiryDurationUpdated(_expiryDuration);
-    }
+    // function setExpiryDuration(uint _expiryDuration) public onlyOwner {
+    //     durations.expiryDuration = _expiryDuration;
+    //     emit ExpiryDurationUpdated(_expiryDuration);
+    // }
 
-    function setMaxTimeToMaturity(uint _maxTimeToMaturity) public onlyOwner {
-        durations.maxTimeToMaturity = _maxTimeToMaturity;
-        emit MaxTimeToMaturityUpdated(_maxTimeToMaturity);
-    }
+    // function setMaxTimeToMaturity(uint _maxTimeToMaturity) public onlyOwner {
+    //     durations.maxTimeToMaturity = _maxTimeToMaturity;
+    //     emit MaxTimeToMaturityUpdated(_maxTimeToMaturity);
+    // }
 
-    function setPoolFee(uint _poolFee) public onlyOwner {
-        uint totalFee = _poolFee + fees.creatorFee;
-        require(totalFee < SafeDecimalMath.unit(), "Total fee must be less than 100%.");
-        require(0 < totalFee, "Total fee must be nonzero.");
-        fees.poolFee = _poolFee;
-        emit PoolFeeUpdated(_poolFee);
-    }
+    // function setPoolFee(uint _poolFee) public onlyOwner {
+    //     uint totalFee = _poolFee + fees.creatorFee;
+    //     require(totalFee < SafeDecimalMath.unit(), "Total fee must be less than 100%.");
+    //     require(0 < totalFee, "Total fee must be nonzero.");
+    //     fees.poolFee = _poolFee;
+    //     emit PoolFeeUpdated(_poolFee);
+    // }
 
-    function setCreatorFee(uint _creatorFee) public onlyOwner {
-        uint totalFee = _creatorFee + fees.poolFee;
-        require(totalFee < SafeDecimalMath.unit(), "Total fee must be less than 100%.");
-        require(0 < totalFee, "Total fee must be nonzero.");
-        fees.creatorFee = _creatorFee;
-        emit CreatorFeeUpdated(_creatorFee);
-    }
+    // function setCreatorFee(uint _creatorFee) public onlyOwner {
+    //     uint totalFee = _creatorFee + fees.poolFee;
+    //     require(totalFee < SafeDecimalMath.unit(), "Total fee must be less than 100%.");
+    //     require(0 < totalFee, "Total fee must be nonzero.");
+    //     fees.creatorFee = _creatorFee;
+    //     emit CreatorFeeUpdated(_creatorFee);
+    // }
 
-    function setRefundFee(uint _refundFee) public onlyOwner {
-        require(_refundFee <= SafeDecimalMath.unit(), "Refund fee must be no greater than 100%.");
-        fees.refundFee = _refundFee;
-        emit RefundFeeUpdated(_refundFee);
-    }
+    // function setRefundFee(uint _refundFee) public onlyOwner {
+    //     require(_refundFee <= SafeDecimalMath.unit(), "Refund fee must be no greater than 100%.");
+    //     fees.refundFee = _refundFee;
+    //     emit RefundFeeUpdated(_refundFee);
+    // }
 
-    function setCreatorCapitalRequirement(uint _creatorCapitalRequirement) public onlyOwner {
-        creatorLimits.capitalRequirement = _creatorCapitalRequirement;
-        emit CreatorCapitalRequirementUpdated(_creatorCapitalRequirement);
-    }
+    // function setCreatorCapitalRequirement(uint _creatorCapitalRequirement) public onlyOwner {
+    //     creatorLimits.capitalRequirement = _creatorCapitalRequirement;
+    //     emit CreatorCapitalRequirementUpdated(_creatorCapitalRequirement);
+    // }
 
-    function setCreatorSkewLimit(uint _creatorSkewLimit) public onlyOwner {
-        require(_creatorSkewLimit <= SafeDecimalMath.unit(), "Creator skew limit must be no greater than 1.");
-        creatorLimits.skewLimit = _creatorSkewLimit;
-        emit CreatorSkewLimitUpdated(_creatorSkewLimit);
-    }
+    // function setCreatorSkewLimit(uint _creatorSkewLimit) public onlyOwner {
+    //     require(_creatorSkewLimit <= SafeDecimalMath.unit(), "Creator skew limit must be no greater than 1.");
+    //     creatorLimits.skewLimit = _creatorSkewLimit;
+    //     emit CreatorSkewLimitUpdated(_creatorSkewLimit);
+    // }
 
     /* ---------- Deposit Management ---------- */
 

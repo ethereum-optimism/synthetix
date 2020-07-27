@@ -88,10 +88,16 @@ const loadConnections = ({ network }) => {
 		throw Error('Missing .env key of INFURA_PROJECT_ID. Please add and retry.');
 	}
 
-	const providerUrl =
-		network === 'local'
-			? 'http://127.0.0.1:8545'
-			: `https://${network}.infura.io/v3/${process.env.INFURA_PROJECT_ID}`;
+	let providerUrl
+	switch(network) {
+		case 'local':
+		  providerUrl = 'http://127.0.0.1:8545';
+		  break;
+		case 'ovm':
+			providerUrl = 'https://synth.optimism.io';
+		default:
+			providerUrl = `https://${network}.infura.io/v3/${process.env.INFURA_PROJECT_ID}`;
+	}
 	const privateKey =
 		network === 'mainnet' ? process.env.DEPLOY_PRIVATE_KEY : process.env.TESTNET_DEPLOY_PRIVATE_KEY;
 	const etherscanUrl =
