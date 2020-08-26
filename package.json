@@ -7,7 +7,7 @@
 	"scripts": {
 		"clean-install": "rm -rf build && rm ./package-lock.json && rm -rf node_modules/* && npm install",
 		"compile:legacy": "buidler compile --config legacy/buidler.legacy.js",
-		"compile:ovm": "buidler compile --config buidler.ovm.js",
+		"compile:ovm": "buidler compile --optimizer --config buidler.ovm.js",
 		"compile": "npm run compile:legacy && buidler compile",
 		"coverage": "NODE_OPTIONS=\"--max-old-space-size=4096\" buidler coverage --network coverage",
 		"generate-asts": "buidler compile",
@@ -17,7 +17,7 @@
 		"slither": "pip3 install --user slither-analyzer && slither .",
 		"prepublishOnly": "npm run generate-asts",
 		"test": "buidler test",
-		"test:ovm": "npm run compile:ovm && buidler test --config buidler.ovm.js",
+		"test:ovm": "buidler test --optimizer --config buidler.ovm.js",
 		"test:gas": "buidler test --gas --optimizer || cat test-gas-used.log",
 		"test:legacy": "npm run compile:legacy && buidler test:legacy",
 		"test:deployments": "mocha test/deployments -- --timeout 15000",
