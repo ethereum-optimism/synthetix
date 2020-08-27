@@ -13,7 +13,7 @@ const {
 contract('Owned', accounts => {
 	const [deployerAccount, account1, account2, account3, account4] = accounts;
 
-	it('should revert when owner parameter is passed the zero address', async () => {
+	it.only('should revert when owner parameter is passed the zero address', async () => {
 		await assert.revert(Owned.new(ZERO_ADDRESS, { from: deployerAccount }));
 	});
 

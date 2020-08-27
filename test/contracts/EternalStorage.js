@@ -50,7 +50,7 @@ contract('EternalStorage', accounts => {
 		});
 	});
 
-	it.only('should revert when owner parameter is passed the zero address', async () => {
+	it('should revert when owner parameter is passed the zero address', async () => {
 		await assert.revert(
 			EternalStorage.new(ZERO_ADDRESS, associatedContract, { from: deployerAccount })
 		);
