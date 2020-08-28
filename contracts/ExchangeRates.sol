@@ -11,7 +11,7 @@ import "./SafeDecimalMath.sol";
 // Internal references
 // AggregatorInterface from Chainlink represents a decentralized pricing network for a single currency key
 import "@chainlink/contracts-0.0.3/src/v0.5/dev/AggregatorInterface.sol";
-
+import { console } from "@nomiclabs/buidler/console.sol";
 
 // https://docs.synthetix.io/contracts/source/contracts/ExchangeRates
 contract ExchangeRates is Owned, SelfDestructible, IExchangeRates {
@@ -452,12 +452,16 @@ contract ExchangeRates is Owned, SelfDestructible, IExchangeRates {
 
     function _getRateAndUpdatedTime(bytes32 currencyKey) internal view returns (RateAndUpdatedTime memory) {
         if (address(aggregators[currencyKey]) != address(0)) {
+            console.log("getting rate and updated time");
             return
                 RateAndUpdatedTime({
                     rate: uint216(aggregators[currencyKey].latestAnswer() * 1e10),
                     time: uint40(aggregators[currencyKey].latestTimestamp())
                 });
         } else {
+            console.log("else: getting rate and updated time");
+            RateAndUpdatedTime memory temp = _rates[currencyKey][currentRoundForRate[currencyKey]];
+            console.log("rate and time!", temp.rate, temp.time);
             return _rates[currencyKey][currentRoundForRate[currencyKey]];
         }
     }
@@ -502,7 +506,9 @@ contract ExchangeRates is Owned, SelfDestructible, IExchangeRates {
             uint destinationRate
         )
     {
+        console.log("getting rate.....");
         sourceRate = _getRate(sourceCurrencyKey);
+        console.log("got rate:", sourceRate);
         // If there's no change in the currency, then just return the amount they gave us
         if (sourceCurrencyKey == destinationCurrencyKey) {
             destinationRate = sourceRate;

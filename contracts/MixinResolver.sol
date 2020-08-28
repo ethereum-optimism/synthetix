@@ -5,7 +5,7 @@ import "./Owned.sol";
 
 // Internal references
 import "./AddressResolver.sol";
-
+import { console } from "@nomiclabs/buidler/console.sol";
 
 // https://docs.synthetix.io/contracts/MixinResolver
 contract MixinResolver is Owned {

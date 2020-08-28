@@ -816,23 +816,25 @@ contract('FeePool', async accounts => {
 
 	it('should track fee withdrawals correctly', async () => {
 		const amount = toUnit('10000');
-
+		console.log('transferring...')
 		// Issue sUSD for two different accounts.
 		await synthetix.transfer(account1, toUnit('1000000'), {
 			from: owner,
 		});
-
+		console.log('issuing synths to owner...')
 		await synthetix.issueSynths(amount, { from: owner });
+		console.log('issuing synths to account1...')
 		await synthetix.issueSynths(amount, { from: account1 });
-
+		console.log('closing fee period...')
 		await closeFeePeriod();
 
 		// Generate a fee.
 		const exchange = toUnit('10000');
+		console.log('exchanging...')
 		await synthetix.exchange(sUSD, exchange, sAUD, { from: owner });
-
+		console.log('closing fee period...')
 		await closeFeePeriod();
-
+		console.log('claiming fees...')
 		// Then claim the owner's fees
 		await feePool.claimFees({ from: owner });
 
@@ -868,6 +870,7 @@ contract('FeePool', async accounts => {
 
 		// And once we roll the periods forward enough we should be able to see the correct
 		// roll over happening.
+		console.log('closing fee periods...')
 		for (let i = 0; i < length * 2; i++) {
 			await closeFeePeriod();
 		}

@@ -210,7 +210,6 @@ contract('Synth', async accounts => {
 		// Issue 10,000 sUSD.
 		const amount = toUnit('10000');
 		await synthetix.issueSynths(amount, { from: owner });
-
 		// Do a single transfer of all our sUSD.
 		const transaction = await sUSDContract.transfer(account1, amount, {
 			from: owner,

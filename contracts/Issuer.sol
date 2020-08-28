@@ -22,7 +22,7 @@ import "./interfaces/IRewardEscrow.sol";
 import "./interfaces/IHasBalance.sol";
 import "./interfaces/IERC20.sol";
 import "./interfaces/ILiquidations.sol";
-
+import { console } from "@nomiclabs/buidler/console.sol";
 
 // https://docs.synthetix.io/contracts/Issuer
 contract Issuer is Owned, MixinResolver, IIssuer {
@@ -189,15 +189,13 @@ contract Issuer is Owned, MixinResolver, IIssuer {
         )
     {
         ISynthetixState state = synthetixState();
-
         // What was their initial debt ownership?
         uint initialDebtOwnership;
         uint debtEntryIndex;
         (initialDebtOwnership, debtEntryIndex) = state.issuanceData(_issuer);
-
         // What's the total value of the system excluding ETH backed synths in their requested currency?
         (totalSystemValue, anyRateIsStale) = _totalIssuedSynths(currencyKey, true);
-
+        console.log("total issued synths", totalSystemValue);
         // If it's zero, they haven't issued, and they have no debt.
         // Note: it's more gas intensive to put this check here rather than before _totalIssuedSynths
         // if they have 0 SNX, but it's a necessary trade-off
@@ -209,7 +207,7 @@ contract Issuer is Owned, MixinResolver, IIssuer {
             .lastDebtLedgerEntry()
             .divideDecimalRoundPrecise(state.debtLedger(debtEntryIndex))
             .multiplyDecimalRoundPrecise(initialDebtOwnership);
-
+        console.log("got current debt ownership");
         // Their debt balance is their portion of the total system value.
         uint highPrecisionBalance = totalSystemValue.decimalToPreciseDecimal().multiplyDecimalRoundPrecise(
             currentDebtOwnership
@@ -239,8 +237,9 @@ contract Issuer is Owned, MixinResolver, IIssuer {
         )
     {
         (alreadyIssued, totalSystemDebt, anyRateIsStale) = _debtBalanceOfAndTotalDebt(_issuer, sUSD);
+        console.log("got debt balance of", alreadyIssued, totalSystemDebt);
         maxIssuable = _maxIssuableSynths(_issuer);
-
+        console.log("max issuable", maxIssuable);
         if (alreadyIssued >= maxIssuable) {
             maxIssuable = 0;
         } else {
@@ -250,8 +249,9 @@ contract Issuer is Owned, MixinResolver, IIssuer {
 
     function _maxIssuableSynths(address _issuer) internal view returns (uint) {
         // What is the value of their SNX balance in sUSD
+        console.log("getting effective value.....");
         uint destinationValue = exchangeRates().effectiveValue("SNX", _collateral(_issuer), sUSD);
-
+        console.log("destination Value", destinationValue);
         // They're allowed to issue up to issuanceRatio of that value
         return destinationValue.multiplyDecimal(synthetixState().issuanceRatio());
     }
@@ -268,15 +268,18 @@ contract Issuer is Owned, MixinResolver, IIssuer {
     }
 
     function _collateral(address account) internal view returns (uint) {
+        console.log("getting collateral for account:", account);
         uint balance = synthetixERC20().balanceOf(account);
-
+        console.log("snx!", balance);
         if (address(synthetixEscrow()) != address(0)) {
             balance = balance.add(synthetixEscrow().balanceOf(account));
         }
+        console.log("snx+escrow!", balance);
 
         if (address(rewardEscrow()) != address(0)) {
             balance = balance.add(rewardEscrow().balanceOf(account));
         }
+        console.log("total collateral balance!", balance);
 
         return balance;
     }
@@ -467,7 +470,7 @@ contract Issuer is Owned, MixinResolver, IIssuer {
     function issueSynths(address from, uint amount) external onlySynthetix {
         // Get remaining issuable in sUSD and existingDebt
         (uint maxIssuable, uint existingDebt, uint totalSystemDebt, bool anyRateIsStale) = _remainingIssuableSynths(from);
-
+        console.log("max issuable, existing debt, total system debt, anyrate is stale");
         require(!anyRateIsStale, "A synth or SNX rate is stale");
 
         require(amount <= maxIssuable, "Amount too large");

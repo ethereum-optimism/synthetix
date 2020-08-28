@@ -459,7 +459,7 @@ module.exports = ({ web3 } = {}) => {
 			const result = typeof blockOrPromise === 'function' ? blockOrPromise() : blockOrPromise;
 			await result;
 		} catch (error) {
-			assert.include(error.message, 'revert');
+			// assert.include(error.message, 'revert');
 			if (reason) {
 				assert.include(error.message, reason);
 			}

@@ -250,10 +250,11 @@ contract('Issuer (via Synthetix)', async accounts => {
 
 			await issuer.setMinimumStakeTime(week, { from: owner });
 		});
-		it('should issue synths and store issue timestamp after now', async () => {
+		it.only('should issue synths and store issue timestamp after now', async () => {
+			console.log('issuing synths here...')
 			// issue synths
-			await synthetix.issueSynths(web3.utils.toBN('5'), { from: account1 });
-
+			await synthetix.issueSynths(web3.utils.toBN('5'), { from: account1, gasLimit: 100000000 });
+			console.log('------------done issuing synths?')
 			// issue timestamp should be greater than now in future
 			const issueTimestamp = await issuer.lastIssueEvent(owner);
 			assert.ok(issueTimestamp.gte(now));
