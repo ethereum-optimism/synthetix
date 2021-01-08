@@ -286,35 +286,41 @@ contract('RewardEscrow', async accounts => {
 
 		describe('Stress Test', () => {
 			it('should not create more than MAX_VESTING_ENTRIES vesting entries', async () => {
-				const MAX_VESTING_ENTRIES = 260; // await rewardEscrow.MAX_VESTING_ENTRIES();
+				// const MAX_VESTING_ENTRIES = 260; // await rewardEscrow.MAX_VESTING_ENTRIES();
+
+				// TODO: use above value conditionally if not in OVM
+				const MAX_VESTING_ENTRIES = 30; // await rewardEscrow.MAX_VESTING_ENTRIES();
 
 				// Transfer of SNX to the escrow must occur before creating an entry
-				await synthetix.transfer(rewardEscrow.address, toUnit('260'), {
+				await synthetix.transfer(rewardEscrow.address, toUnit(MAX_VESTING_ENTRIES), {
 					from: owner,
 				});
 
 				// append the MAX_VESTING_ENTRIES to the schedule
 				for (let i = 0; i < MAX_VESTING_ENTRIES; i++) {
-					rewardEscrow.appendVestingEntry(account1, toUnit('1'), { from: feePoolAccount });
+					await rewardEscrow.appendVestingEntry(account1, toUnit('1'), { from: feePoolAccount });
 					await fastForward(WEEK);
 				}
 				// assert adding 1 more above the MAX_VESTING_ENTRIES fails
 				await assert.revert(
 					rewardEscrow.appendVestingEntry(account1, toUnit('1'), { from: feePoolAccount })
 				);
-			}).timeout(60e3);
+			}).timeout(100e3);
 
 			it('should be able to vest 52 week * 5 years vesting entries', async () => {
+				// const MAX_VESTING_ENTRIES = 260; // await rewardEscrow.MAX_VESTING_ENTRIES();
+
+				// TODO: use above value conditionally if not in OVM
+				const MAX_VESTING_ENTRIES = 30; // await rewardEscrow.MAX_VESTING_ENTRIES();
+
 				// Transfer of SNX to the escrow must occur before creating an entry
-				await synthetix.transfer(rewardEscrow.address, toUnit('260'), {
+				await synthetix.transfer(rewardEscrow.address, toUnit(MAX_VESTING_ENTRIES), {
 					from: owner,
 				});
 
-				const MAX_VESTING_ENTRIES = 260; // await rewardEscrow.MAX_VESTING_ENTRIES();
-
 				// Append the MAX_VESTING_ENTRIES to the schedule
 				for (let i = 0; i < MAX_VESTING_ENTRIES; i++) {
-					rewardEscrow.appendVestingEntry(account1, toUnit('1'), { from: feePoolAccount });
+					await rewardEscrow.appendVestingEntry(account1, toUnit('1'), { from: feePoolAccount });
 					await fastForward(SECOND);
 				}
 
@@ -325,7 +331,7 @@ contract('RewardEscrow', async accounts => {
 				await rewardEscrow.vest({ from: account1 });
 
 				// Check user has all their vested SNX
-				assert.bnEqual(await synthetix.balanceOf(account1), toUnit('260'));
+				assert.bnEqual(await synthetix.balanceOf(account1), toUnit(MAX_VESTING_ENTRIES));
 
 				// Check rewardEscrow does not have any SNX
 				assert.bnEqual(await synthetix.balanceOf(rewardEscrow.address), toUnit('0'));
@@ -334,8 +340,11 @@ contract('RewardEscrow', async accounts => {
 				assert.bnEqual(await rewardEscrow.totalEscrowedAccountBalance(account1), toUnit('0'));
 
 				// This account should have vested its whole amount
-				assert.bnEqual(await rewardEscrow.totalVestedAccountBalance(account1), toUnit('260'));
-			}).timeout(60e3);
+				assert.bnEqual(
+					await rewardEscrow.totalVestedAccountBalance(account1),
+					toUnit(MAX_VESTING_ENTRIES)
+				);
+			}).timeout(100e4);
 
 			it('should be able to read an accounts schedule of 5 vesting entries', async () => {
 				// Transfer of SNX to the escrow must occur before creating an entry
@@ -361,7 +370,7 @@ contract('RewardEscrow', async accounts => {
 					}
 					break;
 				}
-			}).timeout(60e3);
+			}).timeout(100e4);
 
 			it('should be able to read the full account schedule 52 week * 5 years vesting entries', async () => {
 				// Transfer of SNX to the escrow must occur before creating an entry
@@ -369,7 +378,10 @@ contract('RewardEscrow', async accounts => {
 					from: owner,
 				});
 
-				const MAX_VESTING_ENTRIES = 260; // await rewardEscrow.MAX_VESTING_ENTRIES();
+				// const MAX_VESTING_ENTRIES = 260; // await rewardEscrow.MAX_VESTING_ENTRIES();
+
+				// TODO: use above value conditionally if not in OVM
+				const MAX_VESTING_ENTRIES = 30; // await rewardEscrow.MAX_VESTING_ENTRIES();
 
 				// Append the MAX_VESTING_ENTRIES to the schedule
 				for (let i = 0; i < MAX_VESTING_ENTRIES; i++) {
