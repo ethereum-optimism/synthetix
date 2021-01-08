@@ -15,7 +15,7 @@ module.exports = ({ hre, taskArguments: { optimizer } }) => {
 		for (const compiler of hre.config.solidity.compilers) {
 			compiler.settings.optimizer = { enabled: true, runs: optimizerRuns };
 		}
-		hre.config.networks.hardhat.allowUnlimitedContractSize = false;
+		hre.config.networks.hardhat.allowUnlimitedContractSize = true;
 	} else {
 		if (hre.optimizer === undefined) {
 			console.log(gray('Optimizer disabled. Unlimited contract sizes allowed.'));
